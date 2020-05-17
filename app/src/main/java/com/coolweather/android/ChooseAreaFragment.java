@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.coolweather.android.gson.Weather;
 
 import java.io.IOException;
@@ -92,10 +93,17 @@ public class ChooseAreaFragment extends Fragment {
                     queryCounty();
                 }else if(currentLevel==LEVEL_CONTY){
                     String weatherId=countyList.get(position).getWeatherid();
-                    Intent intent=new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
+                    if(getActivity()instanceof MainActivity) {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if(getActivity()instanceof WeatherActivity){
+                        WeatherActivity activity=(WeatherActivity)getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
                 }
             }
         });
@@ -118,6 +126,8 @@ public class ChooseAreaFragment extends Fragment {
         });
         queryProvinces();
     }
+
+
 
     private void queryProvinces(){
         myData=new MyData(getContext(),"cool_weather.db",null,1);
