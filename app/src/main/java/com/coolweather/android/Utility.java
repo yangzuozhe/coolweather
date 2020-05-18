@@ -97,6 +97,8 @@ public class Utility {
     }
 
 
+
+    //解析天气的json格式
     public static Weather handleWeatherResponse(String response){
 
         try {
